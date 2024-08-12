@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import Navbar from './Components/Navbar';
+import Sidebar from './Components/Sidebar';
+import { BrowserRouter as Router, Routes, Route , useLocation} from "react-router-dom";
+import LoginComponent from './Components/Login/LoginComponent';
+import RegisterComponent from './Components/Registration/RegisterComponent';
+import TaskComponent from './Components/Task/TaskComponent';
+import NoteComponent from './Components/Note/NoteComponent';
+import SettingsComponent from './Components/Settings/SettingsComponent';
+import CalendarComponent from './Components/Calendar/CalendarComponent';
+import HomeComponent from './Components/Home/HomeComponent';
 
-function App() {
+
+const App = () => {
+  const location = useLocation();
+  const hideNavbarRoutes = [ '/sidebar','notes' , 'task', 'settings', 'calendar' ];
+  // // Check if current path includes the dynamic segment
+  const shouldHideNavbar = hideNavbarRoutes.some(route => location.pathname.startsWith(route));
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <>
+      <div>
+      {!shouldHideNavbar && <Navbar/>}
+      {/* <Navbar /> */}
+      <Routes>
+        <Route path="/" element={<HomeComponent />} />
+        <Route path="/login" element={<LoginComponent />} />
+        <Route path="/register" element={<RegisterComponent />} />
+
+        <Route path="/sidebar" element={<Sidebar />}>
+          <Route path="notes" element={<NoteComponent />} />
+          <Route path="task" element={<TaskComponent />} />
+          <Route path="settings" element={<SettingsComponent />} />
+          <Route path="calendar" element={<CalendarComponent />} />
+        </Route>
+        
+        
+      </Routes>
     </div>
-  );
+    </>
+  )
 }
 
-export default App;
+const WrappedApp = () => (
+  <Router>
+    <App />
+  </Router>
+);
+
+export default WrappedApp;
